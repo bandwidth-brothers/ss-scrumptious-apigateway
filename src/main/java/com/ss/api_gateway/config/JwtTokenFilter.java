@@ -1,14 +1,10 @@
 package com.ss.api_gateway.config;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.DecodedJWT;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.text.ParseException;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.context.annotation.Configuration;
@@ -16,12 +12,15 @@ import org.springframework.core.Ordered;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.server.ServerWebExchange;
-import reactor.core.publisher.Mono;
 
-import java.text.ParseException;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Mono;
 
 
 @Slf4j
@@ -38,8 +37,26 @@ public class JwtTokenFilter implements GlobalFilter, Ordered {
         ServerHttpResponse response = exchange.getResponse();
 
         final List<String> apiEndpoints = Arrays.asList("/auth/login"
-                                                        ,"auth/accounts/register");
-        if (apiEndpoints.contains(requestUrl)){
+                ,"/auth/accounts/register"
+                ,"/swagger-ui"
+                ,"/swagger-ui.html"
+                ,"/v2/api-docs"
+                ,"/swagger-resources"
+                ,"/restaurant/owner/register"
+                ,"/restaurant/admin/register"
+                ,"/customer/register"
+                ,"/driver/register");
+
+        //System.out.println("URL: " + requestUrl);
+        boolean matches = apiEndpoints.stream().anyMatch(s -> {
+            if (requestUrl.contains(s)) {
+                return true;
+            } else {
+                return false;
+            }
+        });
+
+        if (matches){
             return chain.filter(exchange);
         }
 
