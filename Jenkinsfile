@@ -25,7 +25,7 @@ pipeline{
 		stage('Publish'){
 			steps{
 				withAWS(region: 'us-east-2', credentials: 'aws-creds'){
-					s3Upload(bucket: 'ss-scrumptious-artifacts', file: 'target/ss-scrumptious-auth-0.0.1-SNAPSHOT.jar', path: 'restaurant-auth.jar')
+					s3Upload(bucket: 'ss-scrumptious-artifacts', file: 'target/api_gateway-0.0.1-SNAPSHOT.jar', path: 'scrumptious-gateway.jar')
 				}
 			}
 		}
@@ -34,7 +34,7 @@ pipeline{
 				sh "docker build -t ss-scrumptious-repo:restaurant-auth ."
 				script{
 					docker.withRegistry("https://419106922284.dkr.ecr.us-east-2.amazonaws.com/","ecr:us-east-2:aws-creds"){
-						docker.image("ss-scrumptious-repo:restaurant-auth").push()
+						docker.image("ss-scrumptious-repo:apigateway").push()
 					}
 				}
 				sh "docker system prune -fa"
