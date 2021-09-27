@@ -31,10 +31,10 @@ pipeline{
 		}
 		stage('Deploy'){
 			steps{
-				sh "docker build -t ss-scrumptious-repo:restaurant-auth ."
+				sh "docker build -t ss-scrumptious-repo:api-gateway ."
 				script{
 					docker.withRegistry("https://419106922284.dkr.ecr.us-east-2.amazonaws.com/","ecr:us-east-2:aws-creds"){
-						docker.image("ss-scrumptious-repo:apigateway").push()
+						docker.image("ss-scrumptious-repo:api-gateway").push()
 					}
 				}
 				sh "docker system prune -fa"
