@@ -42,8 +42,8 @@ public class JwtTokenFilter implements GlobalFilter, Ordered {
                 ,"/swagger-ui.html"
                 ,"/v2/api-docs"
                 ,"/swagger-resources"
-                ,"/restaurant/owner/register"
-                ,"/restaurant/admin/register"
+                ,"/restaurant/owners/register"
+                ,"/restaurant/admins/register"
                 ,"/customer/register"
                 ,"/driver/register");
 
