@@ -45,7 +45,8 @@ public class JwtTokenFilter implements GlobalFilter, Ordered {
                 ,"/restaurant/owner/register"
                 ,"/restaurant/admin/register"
                 ,"/customer/register"
-                ,"/driver/register");
+                ,"/driver/register"
+                ,"/auth/health");
 
         //System.out.println("URL: " + requestUrl);
         boolean matches = apiEndpoints.stream().anyMatch(s -> {
