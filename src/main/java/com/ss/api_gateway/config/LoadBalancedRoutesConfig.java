@@ -13,6 +13,7 @@ public class LoadBalancedRoutesConfig {
     public static final String RESTAURANT_SERVICE = "lb://scrumptious-restaurant-service";
     public static final String DRIVER_SERVICE = "lb://scrumptious-driver-service";
     public static final String ORDER_SERVICE = "lb://scrumptious-order-service";
+    public static final String NOTIFICATION_SERVICE = "lb://scrumptious-notification-service";
     public static final String DELIVERY_SERVICE = "lb://scrumptious-delivery-service";
 
     @Bean
@@ -24,6 +25,7 @@ public class LoadBalancedRoutesConfig {
                 .route(r -> r.path("/driver" + "/**").filters(f -> f.stripPrefix(1)).uri(DRIVER_SERVICE))
                 .route(r -> r.path("/order" + "/**").filters(f -> f.stripPrefix(1)).uri(ORDER_SERVICE))
                 .route(r -> r.path("/delivery" + "/**").filters(f -> f.stripPrefix(1)).uri(DELIVERY_SERVICE))
+                .route(r -> r.path("/notification" + "/**").filters(f -> f.stripPrefix(1)).uri(NOTIFICATION_SERVICE))
                 .build();
     }
 }
