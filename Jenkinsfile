@@ -1,5 +1,9 @@
 pipeline{
 	agent any
+	environment{
+		AWS_ID = credentials('aws-id')
+		AWS_REGION = credentials('aws-region')
+	}
 	stages{
 		stage('Checkout'){
 			steps{
@@ -24,20 +28,27 @@ pipeline{
 		}
 		stage('Publish'){
 			steps{
-				withAWS(region: 'us-east-2', credentials: 'aws-creds'){
+				withAWS(region: 'aws-region', credentials: 'aws-creds'){
 					s3Upload(bucket: 'ss-scrumptious-artifacts', file: 'target/api_gateway-0.0.1-SNAPSHOT.jar', path: 'scrumptious-gateway.jar')
 				}
 			}
 		}
 		stage('Deploy'){
 			steps{
+				sh "docker build -t ss-gateway:${GIT_COMMIT[0..7]} -t ss-gateway:latest ."
+				script{
+					docker.withRegistry("https://${AWS_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/","ecr:${AWS_REGION}:aws-creds"){
+						docker.image("ss-gateway:${GIT_COMMIT}").push()
+						docker.image("ss-gateway:latest").push()
+					}
+				}
+				sh "docker system prune -fa"
 				sh "docker build -t ss-scrumptious-repo:api-gateway ."
 				script{
 					docker.withRegistry("https://419106922284.dkr.ecr.us-east-2.amazonaws.com/","ecr:us-east-2:aws-creds"){
 						docker.image("ss-scrumptious-repo:api-gateway").push()
 					}
 				}
-				sh "docker system prune -fa"
 			}
 		}
 	}
