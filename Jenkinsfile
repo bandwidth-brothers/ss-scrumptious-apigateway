@@ -28,7 +28,7 @@ pipeline{
 		}
 		stage('Publish'){
 			steps{
-				withAWS(region: 'aws-region', credentials: 'aws-creds'){
+				withAWS(region: 'us-east-2', credentials: 'aws-creds'){
 					s3Upload(bucket: 'ss-scrumptious-artifacts', file: 'target/api_gateway-0.0.1-SNAPSHOT.jar', path: 'scrumptious-gateway.jar')
 				}
 			}
